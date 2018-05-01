@@ -1,0 +1,2 @@
+class FulfillmentLocation < ApplicationRecord
+end
