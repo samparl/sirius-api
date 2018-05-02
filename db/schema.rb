@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180501055215) do
+ActiveRecord::Schema.define(version: 20180502011337) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,6 +23,11 @@ ActiveRecord::Schema.define(version: 20180501055215) do
     t.integer  "zip",        null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "addresses_customers", id: false, force: :cascade do |t|
+    t.integer "customer_id", null: false
+    t.integer "address_id",  null: false
   end
 
   create_table "carriers", force: :cascade do |t|
@@ -59,6 +64,16 @@ ActiveRecord::Schema.define(version: 20180501055215) do
     t.datetime "updated_at",  null: false
     t.index ["name"], name: "index_items_on_name", using: :btree
     t.index ["sku"], name: "index_items_on_sku", using: :btree
+  end
+
+  create_table "items_shipments", id: false, force: :cascade do |t|
+    t.integer "item_id",     null: false
+    t.integer "shipment_id", null: false
+  end
+
+  create_table "items_vendors", id: false, force: :cascade do |t|
+    t.integer "vendor_id", null: false
+    t.integer "item_id",   null: false
   end
 
   create_table "orders", force: :cascade do |t|
