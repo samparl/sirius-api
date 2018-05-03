@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180502011337) do
+ActiveRecord::Schema.define(version: 20180503032926) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -71,11 +71,6 @@ ActiveRecord::Schema.define(version: 20180502011337) do
     t.integer "shipment_id", null: false
   end
 
-  create_table "items_vendors", id: false, force: :cascade do |t|
-    t.integer "vendor_id", null: false
-    t.integer "item_id",   null: false
-  end
-
   create_table "orders", force: :cascade do |t|
     t.integer  "address_id"
     t.integer  "customer_id"
@@ -86,14 +81,14 @@ ActiveRecord::Schema.define(version: 20180502011337) do
   end
 
   create_table "shipments", force: :cascade do |t|
-    t.string   "status",      null: false
+    t.integer  "status",      default: 0, null: false
     t.integer  "order_id"
     t.integer  "vendor_id"
     t.integer  "carrier_id"
     t.integer  "origin_id"
     t.integer  "location_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
     t.index ["carrier_id"], name: "index_shipments_on_carrier_id", using: :btree
     t.index ["location_id"], name: "index_shipments_on_location_id", using: :btree
     t.index ["order_id"], name: "index_shipments_on_order_id", using: :btree
@@ -109,6 +104,11 @@ ActiveRecord::Schema.define(version: 20180502011337) do
     t.datetime "updated_at",      null: false
     t.index ["email"], name: "index_vendors_on_email", unique: true, using: :btree
     t.index ["name"], name: "index_vendors_on_name", using: :btree
+  end
+
+  create_table "vendors_items", id: false, force: :cascade do |t|
+    t.integer "vendor_id", null: false
+    t.integer "item_id",   null: false
   end
 
   add_foreign_key "fulfillment_locations", "addresses"

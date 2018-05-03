@@ -8,4 +8,5 @@
 
 case Rails.env
 when 'development'
-  load(Rails.root.join('db', 'seeds', 'development'))
+  load(Rails.root.join('db', 'seeds', 'development.rb'))
+end
