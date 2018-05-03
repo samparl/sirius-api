@@ -1,14 +1,16 @@
 class V1::ShipmentsController < ApplicationController
   def index
-    status_param = params.require(:status).downcase
-    customer_param = params.require(:customer)
-    @shipments = Shipment.get_shipments({
-      customer: customer_param,
-      status: status_param
-    })
-    # Shipment.joins(:order)
-    #   .where(orders: { customer_id: customer_param })
-    #   .where("status = ?", )
+    status = params[:status]
+    customer = params[:customer]
+    vendor = params[:vendor]
+    late = params[:late]
+
+    @shipments = Shipment.where(nil)
+    @shipments = @shipments.vendor(vendor) if vendor.present?
+    @shipments = @shipments.customer(customer) if customer.present?
+    @shipments = @shipments.status(status.downcase) if status.present?
+    # puts [:original_delivery, :estimated_delivery]
+    # @shipments = @shipments.late if late.present?
 
     render json: @shipments
   end
