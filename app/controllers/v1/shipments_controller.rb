@@ -5,14 +5,14 @@ class V1::ShipmentsController < ApplicationController
     vendor = params[:vendor]
     late = params[:late]
 
-    @shipments = Shipment.where(nil)
+    @shipments = Shipment.includes(:vendor)
+    # @shipments = Shipment.find :all, include: :vendor
     @shipments = @shipments.vendor(vendor) if vendor.present?
     @shipments = @shipments.customer(customer) if customer.present?
     @shipments = @shipments.status(status.downcase) if status.present?
-    # puts [:original_delivery, :estimated_delivery]
-    # @shipments = @shipments.late if late.present?
+    @shipments = @shipments.late if late.present? && late.to_s == 'true'
 
-    render json: @shipments
+    render json: @shipments.order(created_at: :desc).limit(10).to_json(include: :vendor)
   end
 
   def show

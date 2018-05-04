@@ -36,16 +36,12 @@ def random_items(repeated)
   end
 end
 
-def random_shipments(repeated)
+def random_shipments(repeated, item_count)
   carriers = Carrier.pluck(:id)
   customers = Customer.pluck(:id)
   items = Item.pluck(:id)
   vendors = Vendor.pluck(:id)
   fulfillment_locations = FulfillmentLocation.pluck(:id)
-
-  # Random times
-  day = 86400
-  six_months = 6 * 30 * day
 
   repeated.times do
     customer = Customer.find(customers.sample)
@@ -53,6 +49,7 @@ def random_shipments(repeated)
     vendor = Vendor.find(vendors.sample)
     item = Item.find(items.sample)
     origin = FulfillmentLocation.find(fulfillment_locations.sample)
+    location = FulfillmentLocation.find(fulfillment_locations.sample)
 
     order = Order.create!({
       customer: customer,
@@ -63,17 +60,24 @@ def random_shipments(repeated)
       order: order,
       status: Shipment.statuses.keys.sample,
       origin: origin.address,
+      location: location,
       carrier: Carrier.find(carrier),
       vendor: Vendor.find(vendor)
     })
 
-    items = 2.times.map { Item.find(item) }
+    items = item_count.times.map { Item.find(item) }
     shipment.items << items
 
-    shipment.original_delivery = (Time.now - rand(30 * 6 * day)).utc
-    shipment.estimated_delivery = (shipment.original_delivery - rand(2 * day) + 4 * day).utc
+    scheduled_delivery = (Time.now - rand(30 * 6 * 86400))
+    projected_delivery = (scheduled_delivery - rand(2 * 86400) + 4 * 86400)
+
+    shipment.scheduled_delivery = scheduled_delivery.utc.to_s
+    shipment.projected_delivery = projected_delivery.utc.to_s
+
     if shipment.delivered?
-      shipment.delivery = shipment.estimated_delivery
+      shipment.delivery = shipment.projected_delivery.utc.to_s
     end
+
+    shipment.save!
   end
 end
