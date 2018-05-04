@@ -16,4 +16,10 @@ class Shipment < ApplicationRecord
   # N.B. The threshold_date criterion determining very_late is set upon shipment creation
   scope :very_late, -> { where('shipments.threshold_date < shipments.projected_delivery') }
 
+  def self.summary
+    total = Shipment.all.count
+    late = Shipment.all.late.count
+    very_late = Shipment.all.very_late.count
+    { on_time: total - late, late: late - very_late, very_late: very_late }
+  end
 end

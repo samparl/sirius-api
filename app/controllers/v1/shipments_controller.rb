@@ -4,15 +4,20 @@ class V1::ShipmentsController < ApplicationController
     customer = params[:customer]
     vendor = params[:vendor]
     late = params[:late]
+    page = params[:page] || 0
 
-    @shipments = Shipment.includes(:vendor)
-    # @shipments = Shipment.find :all, include: :vendor
+    @shipments = Shipment.where(nil)
     @shipments = @shipments.vendor(vendor) if vendor.present?
     @shipments = @shipments.customer(customer) if customer.present?
     @shipments = @shipments.status(status.downcase) if status.present?
     @shipments = @shipments.late if late.present? && late.to_s == 'true'
+    @shipments = @shipments.page(page)
 
-    render json: @shipments.order(created_at: :desc).limit(10).to_json(include: :vendor)
+    render json: {
+      summary: Shipment.summary,
+      page_count: @shipments.total_pages,
+      shipments: @shipments.order(created_at: :desc).to_json(include: :vendor)
+      }
   end
 
   def show
@@ -20,10 +25,6 @@ class V1::ShipmentsController < ApplicationController
   end
 
   def summary
-    total = Shipment.all.count
-    late = Shipment.all.late.count
-    very_late = Shipment.all.very_late.count
-
-    render json: { on_time: total - late, late: late - very_late, very_late: very_late }
+    render json: Shipment.summary
   end
 end

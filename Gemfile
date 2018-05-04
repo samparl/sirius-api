@@ -23,7 +23,7 @@ gem 'bcrypt', '~> 3.1.7'
 # gem 'jwt'
 
 # Pagination with Kaminari
-# gem 'kaminari';
+gem 'kaminari'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
