@@ -12,4 +12,8 @@ class Shipment < ApplicationRecord
   scope :vendor, -> (vendor) { where vendor_id: vendor }
   scope :customer, -> (customer) { joins(:order).where(orders: { customer_id: customer }) }
   scope :late, -> { where('shipments.scheduled_delivery < shipments.projected_delivery') }
+
+  # N.B. The threshold_date criterion determining very_late is set upon shipment creation
+  scope :very_late, -> { where('shipments.threshold_date < shipments.projected_delivery') }
+
 end

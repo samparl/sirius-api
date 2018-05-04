@@ -18,4 +18,12 @@ class V1::ShipmentsController < ApplicationController
   def show
     render json: Shipment.find(params[:id])
   end
+
+  def summary
+    total = Shipment.all.count
+    late = Shipment.all.late.count
+    very_late = Shipment.all.very_late.count
+
+    render json: { on_time: total - late, late: late - very_late, very_late: very_late }
+  end
 end

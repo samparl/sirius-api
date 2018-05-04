@@ -69,9 +69,11 @@ def random_shipments(repeated, item_count)
     shipment.items << items
 
     scheduled_delivery = (Time.now - rand(30 * 6 * 86400))
-    projected_delivery = (scheduled_delivery - rand(2 * 86400) + 4 * 86400)
+    threshold_date = scheduled_delivery + 3 * 86400
+    projected_delivery = (scheduled_delivery - rand(4 * 86400) + 2 * 86400)
 
     shipment.scheduled_delivery = scheduled_delivery.utc.to_s
+    shipment.threshold_date = threshold_date.utc.to_s
     shipment.projected_delivery = projected_delivery.utc.to_s
 
     if shipment.delivered?
