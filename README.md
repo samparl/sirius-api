@@ -4,6 +4,8 @@
 
 * Download Rails and PostgresQL if not yet on your machine
 
+* Install the required dependencies ('gems') with `bundle install`
+
 * To initialize the database:
   * Make sure that your machine is serving PostgresQL
   * Run `rails db:setup`
