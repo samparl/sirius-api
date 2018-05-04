@@ -14,7 +14,6 @@ class V1::ShipmentsController < ApplicationController
     @shipments = @shipments.page(page)
 
     render json: {
-      summary: Shipment.summary,
       page_count: @shipments.total_pages,
       shipments: @shipments.order(created_at: :desc).to_json(include: :vendor)
       }
