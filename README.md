@@ -1,4 +1,4 @@
-# WELOME TO SIRIUS
+# WELOME TO SIRIUS API
 
 * This application uses Ruby version 2.3.3
 

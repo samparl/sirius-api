@@ -15,7 +15,7 @@ class V1::ShipmentsController < ApplicationController
 
     render json: {
       page_count: @shipments.total_pages,
-      shipments: @shipments.order(created_at: :desc).to_json(include: :vendor)
+      shipments: @shipments.order(created_at: :desc).to_json(include: { vendor: { only: [:name, :email] }})
       }
   end
 
